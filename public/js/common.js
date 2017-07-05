@@ -27,3 +27,38 @@ function fetcher(url, request, callback) {
 var $$ = (id) => document.getElementById(id);
 
 Node.prototype.prependChild = function(e){ this.insertBefore(e,this.firstChild); }
+
+class Feed {
+  constructor(raw) {
+    this.id = raw.id;
+    this.user_id = raw.user_id;
+    this.name = raw.name;
+    this.feed_type = raw.feed_type;
+    this.updated_at = raw.updated_at;
+    this.created_at = raw.created_at;
+    this.comment = raw.comment;
+    this.exif = raw.exif;
+    this.image_file_name = raw.image_file_name;
+  }
+
+  isText() {
+    return this.feed_type == 'text';
+  }
+  isImage() {
+    return this.feed_type == 'image';
+  }
+  getCaption() {
+    return (this.exif.length > 1) ? `${this.exif}にて撮影` : '';
+  }
+
+  getPostedDate() {
+    let date = new Date(this.created_at);
+    return date.toLocaleString()
+  }
+
+  build() {
+    const compiler = _.template( $$("feed-tmpl").textContent );
+    return compiler( { feed: this } );
+  }
+
+}

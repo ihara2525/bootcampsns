@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (result.feeds && result.feeds.length > 0) {
         latestFeedId = result.feeds[0].id;
         oldestFeedId = result.feeds[result.feeds.length-1].id;
-        $$('div-feeds').appendChild(createFeedFragment(result.feeds));
+        __appendFeeds( createFeedFragment(result.feeds) );
         setTimeout(loadOldFeeds, 1000);
       }
     }
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $$('div-new-feeds').style.display = 'block';
         if (result.feeds && result.feeds.length > 0) {
           latestFeedId = result.feeds[0].id;
-          $$('div-feeds').prependChild(createFeedFragment(result.feeds));
+          __prependFeeds ( createFeedFragment(result.feeds) );
           $$('span-new-feed-count').textContent = 0;
           $$('div-new-feeds').style.display = 'none';        
         }
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
       $$('div-old-feeds').style.display = (result.count > 0 ? 'block' : 'none');
       if (result.feeds && result.feeds.length > 0) {
         oldestFeedId = result.feeds[result.feeds.length-1].id;
-        $$('div-feeds').appendChild(createFeedFragment(result.feeds));
+        __appendFeeds( createFeedFragment(result.feeds) );
         $$('div-old-feeds').style.display = 'none';
         setTimeout(loadOldFeeds, 1000);    
       }
@@ -153,40 +153,20 @@ document.addEventListener('DOMContentLoaded', () => {
     fetcher(url, {method: 'GET'}, process);
   }
 
+  function __appendFeeds(domHtml) {
+    $('#div-feeds').append(domHtml);
+  }
+  function __prependFeeds(domHtml) {
+    $('#div-feeds').prepend(domHtml);
+  }
+
   // フィードのDOM生成
   function createFeedFragment(feeds) {
-    var tmpl = `
-    <div class='feed' id='id'>
-    <div class='container'>
-    <div class='media'>
-    <span class='pull-left'><img class='media-object' id='icon'></span>
-    <div class='media-body' id='body'>
-    <h4 class='media-heading user-name'>
-    <span id='name'></span><small class='datetime' id='time'></small>
-    </h4><span id='content'></span></div></div></div></div>`;
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < feeds.length; i++) {
-      var range = document.createRange();
-      range.selectNode(document.body);
-      var cf = range.createContextualFragment(tmpl);
-      cf.getElementById('id').id = feeds[i].id;
-      cf.getElementById('icon').src = `/users/${feeds[i].user_id}/icon`;
-      cf.getElementById('name').textContent = feeds[i].name;
-      let date = new Date(feeds[i].created_at);
-      cf.getElementById('time').textContent = date.toLocaleString();
+    let feedModels = [];
+    feeds.forEach((feed)=>{ feedModels.push( new Feed(feed) );});
+    let result = '';
+    feedModels.forEach((feed)=>{ result += feed.build(); });
 
-      if(feeds[i].feed_type == 'text') {
-        // テキストフィードの場合
-        cf.getElementById('content').textContent = feeds[i].comment;
-      } else {
-        // 画像フィードの場合
-        let caption = (feeds[i].exif.length > 1) ? `${feeds[i].exif}にて撮影` : '';
-        cf.getElementById('content').innerHTML = `
-          <img class='img-responsive img-thumbnail' src='/images/${feeds[i].image_file_name}'>
-          <br><small class='exif'>${caption}</small>`;
-      }      
-      fragment.appendChild(cf);
-    }
-    return fragment;
+    return result;
   }
 });
