@@ -6,7 +6,6 @@ class UsersController < ApplicationController
     @user = User.create user_params
     render json: {errors: @user.errors.full_messages}, status: :bad_request and return if @user.errors.any?
 
-    @user = User.find_by user: @user.user
     log_in @user
     render json: {name: @user.name, icon: icon_user_path(@user)} and return
   end
