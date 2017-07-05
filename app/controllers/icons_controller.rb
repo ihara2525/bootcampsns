@@ -2,9 +2,8 @@ class IconsController < ApplicationController
 
   def create
     file_name = params[:image].original_filename.downcase
-    mime_type = params[:image].content_type.downcase
-
-    if !!file_name.match(/png|jpeg|jpg|gif/) and mime_type.start_with? 'image/'
+    image_file = MimeMagic.by_magic(File.open(params[:image].path))
+    if image_file.mediatype == 'image' && ['png', 'jpeg', 'jpg', 'gif'].include?(image_file.subtype)
       dest_file_name = "#{SecureRandom.uuid}#{File.extname(file_name)}"
       image_path = "#{Rails.root}/public/icons/#{dest_file_name}"
       FileUtils.mv params[:image].tempfile, image_path

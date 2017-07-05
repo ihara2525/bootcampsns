@@ -9,3 +9,4 @@ db/development.sqlite*
 !/log/.keep
 /tmp
 /public/icons
+/public/images
