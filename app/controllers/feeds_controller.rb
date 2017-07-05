@@ -9,6 +9,9 @@ class FeedsController < ApplicationController
       when 'image'
         begin
           img = Magick::Image.from_blob(File.read params[:image].tempfile).shift
+
+          render json: {errors: ['画像フォーマットが正しくありません']}, status: :bad_request and return if !img.format.match(/png|jpeg|jpg|gif/i)
+
           exif = "#{img.properties['exif:Make']||=''} #{img.properties['exif:Model']||=''}"
           img.format = "JPEG"
           img.resize_to_fit!(500, 500)
