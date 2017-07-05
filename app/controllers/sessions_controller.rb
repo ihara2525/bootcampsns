@@ -3,7 +3,8 @@ class SessionsController < ApplicationController
 
   def create
     begin
-      @user = User.find_by "user='#{params[:user]}' and pass='#{ Digest::MD5.hexdigest params[:pass] }'"
+      @user = User.find_by(user: params[:user])
+      raise unless @user.pass == BCrypt::Engine.hash_secret(params[:pass], @user.salt)
       log_in @user
       render json: {name: @user.name, icon: icon_user_path(@user)} and return
     rescue
