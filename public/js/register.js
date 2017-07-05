@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let body = new FormData();
     body.append('image', event.dataTransfer.files[0]);
-    body.append('resize_max_pixel', 240);
 
     let process = result => {
       if (result.file_name) {
