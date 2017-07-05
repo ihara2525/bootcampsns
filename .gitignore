@@ -9,4 +9,5 @@ db/development.sqlite*
 !/log/.keep
 /tmp
 /public/icons
+!/public/icons/default.png
 /public/images
