@@ -8,3 +8,4 @@ db/development.sqlite*
 /log/*
 !/log/.keep
 /tmp
+/public/icons
