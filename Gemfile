@@ -24,6 +24,8 @@ gem 'rmagick'
 
 gem 'bcrypt'
 
+gem 'mimemagic'
+
 group :production do
   # Use Unicorn as the app server
   gem 'unicorn'
