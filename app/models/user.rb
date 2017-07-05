@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
 
   before_save :hash_password
   def hash_password
-    self.pass = Digest::MD5.hexdigest self.pass
+    self.salt = BCrypt::Engine.generate_salt
+    self.pass = BCrypt::Engine.hash_secret(self.pass, self.salt)
   end
 end
