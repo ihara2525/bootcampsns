@@ -26,18 +26,18 @@ class FeedsController < ApplicationController
   end
 
   def index
-    @feeds = Feed.joins(:user).where("user_id IN (#{scope_user_ids.join(', ')})").select('feeds.*,users.name').order('id DESC').limit(30)
+    @feeds = Feed.joins(:user).where("user_id IN (?)", scope_user_ids).select('feeds.*,users.name').order('id DESC').limit(30)
     render json: {count: @feeds.count, feeds: @feeds} and return
   end
 
   def find_new
-    @feeds = Feed.joins(:user).where("user_id IN (#{scope_user_ids.join(', ')}) and feeds.id > ?", params[:id].to_i).select('feeds.*,users.name').order('id DESC')
+    @feeds = Feed.joins(:user).where("user_id IN (?) and feeds.id > ?", scope_user_ids, params[:id].to_i).select('feeds.*,users.name').order('id DESC')
     render json: {count: @feeds.length, feeds: @feeds} and return if params[:include_items] == '1'
     render json: {count: @feeds.length} and return
   end
 
   def find_old
-    @feeds = Feed.joins(:user).where("user_id IN (#{scope_user_ids.join(', ')}) and feeds.id < ?", params[:id].to_i).select('feeds.*,users.name').order('id DESC').limit(30)
+    @feeds = Feed.joins(:user).where("user_id IN (?) and feeds.id < ?", scope_user_ids, params[:id].to_i).select('feeds.*,users.name').order('id DESC').limit(30)
     render json: {count: @feeds.length, feeds: @feeds} and return if params[:include_items] == '1'
     render json: {count: @feeds.length} and return
   end
