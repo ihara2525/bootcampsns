@@ -8,6 +8,6 @@ db/development.sqlite*
 /log/*
 !/log/.keep
 /tmp
-/public/icons
-!/public/icons/default.png
+/public/icons/*
+!/public/icons/default_light.png
 /public/images

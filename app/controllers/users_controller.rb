@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       @user = User.find params[:id]
       send_data File.read "#{Rails.root}/public/icons/#{@user[:icon_file_name]}", disposition: 'inline'
     rescue
-      send_data File.read "#{Rails.root}/public/icons/default.png", disposition: 'inline'
+      send_data File.read "#{Rails.root}/public/icons/default_light.png", disposition: 'inline'
     end
   end
 
