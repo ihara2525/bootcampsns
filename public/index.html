@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/index.css">
   <link rel="shortcut icon" href="favicon.ico">
   <script src="js/ext/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
   <script src="js/ext/bootstrap.min.js"></script>
   <script src="js/common.js"></script>
   <script src="js/index.js"></script>
@@ -131,6 +132,38 @@
     </button>
   </div>
 </div>
+
+
+<!-- Template -->
+<script type="text/template" id="feed-tmpl">
+
+<div class='feed' id='<%- feed.id%>'>
+  <div class='container'>
+    <div class='media'>
+      <span class='pull-left'>
+        <img class='media-object' src="/users/<%- feed.user_id %>/icon" />
+      </span>
+      <div class='media-body'>
+        <h4 class='media-heading user-name'>
+          <span><%- feed.name %></span>
+          <small class='datetime'><%- feed.getPostedDate() %></small>
+        </h4>
+        <span>
+        <% if ( feed.isText() ) { %>
+          <%- feed.comment %>
+        <% } %>
+        <% if ( feed.isImage() ) { %>
+          <img class='img-responsive img-thumbnail' src='/images/<%- feed.image_file_name %>'>
+          <br><small class='exif'><%- feed.getCaption() %></small>
+        <% } %>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</script>
+<!-- End Template -->
 
 </body>
 </html>
